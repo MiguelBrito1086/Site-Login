@@ -16,14 +16,24 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(expressValidator())
 
-app.use(
-  expressSession({
-    secret: 'keyboard dog',
-    resave: false,
-    saveUninitialized: true
-  })
-)
+const authenticate = (req, res, next) => {
+  if (req.body.user === "Kitty" && req.body.pw === "kat") {
+    next()
+  } else {
+    res.redirect("/login")
+  }
+}
 
-app.get("/", (req, resp, next) {
-  
+app.get("/login", (req, res) => {
+  res.render("login")
+})
+
+app.use(authenticate)
+
+app.post("/", (req, res) => {
+  res.render("home", req.body)
+})
+
+app.listen(3000, (req, res) => {
+  console.log("Here we go again")
 })
